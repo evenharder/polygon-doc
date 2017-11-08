@@ -1,0 +1,72 @@
+\documentclass{article}
+
+\usepackage[hangul]{kotex}
+\usepackage[unicode,bookmarks=true]{hyperref}
+\usepackage{fancyvrb}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[top=3cm, left=3cm, right=3cm, bottom=2cm]{geometry}
+\usepackage{lipsum}
+\begin{document}
+    Validator는 test case들이 문제의 조건에 부합하는지 검증하는 프로그램입니다.
+    \subsection{Validator 작성}
+    \verb|testlib.h|를 이용해서 작성할 수 있으며, 입력과 관련된 함수는 \verb|inf|에서 호출해야 합니다. \verb|inf|는 \verb|testlib.h|에 전역으로 선언되어 있는 \verb|InStream|이며, test의 모든 내용이 저장되어 있습니다. 편의상 \verb|inf|를 \textit{포인터}로 지칭하겠습니다.
+    \begin{itemize}
+        \item \verb|void registerValidation(int argc, char* argv[])|\\
+        이 파일이 Validator라는 것을 선언하는 함수입니다. \verb|argc|와 \verb|argv|는 main의 그것과 같습니다.
+        \item \verb|void skipBlanks()|\\
+        whitespace가 아닌 문자나 EOF를 만날 때까지 포인터를 이동합니다.
+        \item \verb|char readChar()|\\
+        읽은 문자를 반환하며 포인터를 한 칸 앞으로 움직입니다.
+        \item \verb|char readChar(char c)|\\
+        \verb|readChar|와 같지만, 읽은 문자가 \verb|c|랑 다르면 에러를 일으킵니다.
+        \item \verb|char readSpace()|\\
+        \verb|readChar(' ')|와 동일합니다.
+        \item \verb|void unreadChar(char c)|\\
+        포인터가 가리키고 있는 곳에 \verb|c|를 넣고 포인터를 한 칸 뒤로 옮깁니다. 포인터가 맨 앞에 있을 때 호출하면 에러를 일으킵니다.
+        \item \verb|std::string readToken()|, \verb|std::string readWord()|\\
+        whitespace아 아닌 문자나 EOF를 읽을 때까지 읽은 문자를 \verb|std::string| 형으로 반환합니다.
+        \item \verb|std::string readToken(const std::string& ptrn, const std::string& variableName = "")|\\
+        기본적으로는 \verb|readToken|이랑 동일하나 읽은 데이터가 \verb|ptrn|과 일치해야 하고, 일치하지 않을 때 \verb|variableName|을 포함한 에러 메시지가 출력됩니다.
+        \item \verb|long long readLong()|\\
+        \verb|long long|형의 값을 읽습니다.
+        \item \verb|int readInteger(), int readInt()|\\
+        \verb|int|형의 값을 읽습니다.
+        \item \verb|double readReal(), double readDouble()|\\
+        \verb|double|형의 값을 읽습니다.
+        \item \verb|long long readLong(long long minv, long long maxv, const std::string& variableName = "")|\\
+        \verb|readLong|과 동일하지만 읽은 값이 \verb|minv| 이상 \verb|maxv| 이하여야 하며, 그렇지 않을 경우 \verb|variableName|을 포함한 에러 메시지가 출력됩니다.
+        \begin{itemize}
+            \item 형만 다른 \verb|readInt|, \verb|readDouble|도 위 꼴로 존재하며, 추가적으로 실수 정밀도까지 다루는 \verb|readStrictDouble| 함수도 존재합니다.
+        \end{itemize}
+        \item \verb|std::string readString()|, \verb|std::string readLine()|
+       줄바꿈(EOLN)이나 EOF를 읽을 때까지 읽은 문자를 \verb|std::string| 형으로 반환합니다.
+       \begin{itemize}
+           \item 역시 \verb|ptrn|과 \verb|variableName|이 있는 함수도 있으며, 이 쪽이 권장됩니다.
+       \end{itemize}
+       \item \verb|void readEoln()|\\
+       줄바꿈 문자를 읽습니다.
+       \item \verb|void readEof()|\\
+       EOF를 읽습니다.
+       \item \verb|inline void ensuref(bool cond, const char* format, ...)|\\
+       \verb|assert(cond)| 구문이랑 동일하며, \verb|format| 이후는 에러 메시지입니다.
+    \end{itemize}
+    유의해야 할 점은 다음과 같습니다.
+    \begin{itemize}
+        \item 각 함수들은 반드시 묘사된 의도로만 사용되어야 하며, 그렇지 않을 경우 에러가 날 수 있습니다(예시 : 파일을 아직 다 안 읽었는데 \verb|readEof| 호출).
+        \item \verb|testlib.h|의 \verb|validator| 폴더 안에 예시가 동봉되어 있습니다.
+    \end{itemize}
+    \subsection{Validator 검증}
+    만든 Validator를 검증하기 위한 테스트 데이터를 Validator - Add Test를 통해 만들 수 있습니다.
+    \begin{itemize}
+        \item 각 test에 대한 Input과 그에 따른 Verdict(결과)를 입력할 수 있습니다.
+        \item Multiple Tests 옵션을 활성화하면 \verb|===|을 줄의 경계로 여러 test를 넣을 수 있습니다.
+        \begin{itemize}
+            \item Validator의 test는 generator나 script 등으로 넣을 수 없으므로 이 쪽이 권장됩니다.
+            \item 단, 메가바이트 단위의 텍스트를 Ctrl CV하는 것은 브라우저의 렉을 유발할 수 있습니다.
+        \end{itemize}
+        \item 실제 위 test로 검증하는 것은 나중에 Main Solution을 설정하고 진행할 수 있습니다.
+    \end{itemize}
+\end{document}
