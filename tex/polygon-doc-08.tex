@@ -1,0 +1,70 @@
+\documentclass{article}
+
+\usepackage[hangul]{kotex}
+\usepackage[unicode,bookmarks=true]{hyperref}
+\usepackage{fancyvrb}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[top=3cm, left=3cm, right=3cm, bottom=2cm]{geometry}
+\usepackage{lipsum}
+\begin{document}
+    Test에는 test case들이 저장됩니다.
+    \subsection{Test 만들기}
+    \subsubsection{직접 추가}
+    외부에서 만든 test case 추가는 Add Tests를 통해서 진행됩니다. 
+    \begin{itemize}
+        \item 직접 추가하기 : Data에 Ctrl CV하면 됩니다.
+        \item From the archive : test case만 있는 zip 파일을 제출하면 됩니다.
+        \item From the files : File을 올리면 됩니다.
+    \end{itemize}
+    다만 몇 개의 예제를 제외하고는 manual한 방법은 권장되지 않습니다.
+    \subsubsection{testlib.h 사용}
+    \verb|testlib.h|를 사용해서 Generator를 만들 수 있습니다. 
+    \begin{itemize}
+        \item \verb|void registerGen(int argc, char* argv[], int randomGeneratorVersion)|\\
+        이 파일이 Generator라는 것을 선언하는 함수입니다. \verb|argc|와 \verb|argv|는 main의 그것과 같습니다.
+        \item \verb|double next()|\\
+        0 이상 1 미만 무작위 실수를 반환합니다.
+        \item \verb|T next(T n)|\\
+        0 이상 \verb|n| 미만의 \verb|T|형 값을 반환합니다.
+        \item \verb|T next(T from, T to)|\\
+        \verb|from| 이상 \verb|to| 이하의 \verb|T|형 값을 반환합니다.
+        \item \verb|std::string next(std::string ptm)|\\
+        \verb|ptm|에 있는 Regex 기반 패턴에 맞춘 무작위 문자열을 반환합니다.
+        \item \verb|T wnext(T n, int type)|\\
+        0 이상 \verb|n| 미만의 T형 수 중, \verb|type|이 양수일 때는 큰 쪽으로, 음수일 때는 작은 쪽으로 가중치가 부여됩니다.
+        \item \verb|void shuffle(_RandomAccessIter __first, _RandomAccessIter __last)|\\
+        \verb|algorithm| 헤더의 \verb|std::random_shuffle| 대신 사용해야 하는 함수입니다.
+        \item \verb|typename Container::value_type any(const Container& c)|\\
+        \verb|c| 안에 있는 원소 중 하나가 무작위로 반환됩니다.
+    \end{itemize}
+    유의해야 할 점은 다음과 같습니다.
+    \begin{itemize}
+        \item[-] 모든 난수 생성 함수는 \verb|testlib.h|에 전역으로 선언되어 있는 \verb|rnd|을 이용해 호출해야 합니다.
+        \item[-] \verb|rand()|나 \verb|srand()|는 사용할 수 없습니다(Polygon이 내부적으로 seeding을 진행합니다)
+        \item[-] 인자는 \verb|stdin|대신 \verb|argc|와 \verb|argv|로 전달받습니다.
+        \item[-] \verb|testlib.h|의 \verb|generator| 폴더 안에 예시가 동봉되어 있습니다.
+    \end{itemize}
+    이렇게 만든 Generator는 Files를 통해 업로드 가능하며, test를 생성할 때 Manual 옵션 대신 Script 옵션을 통해 넣을 수도 있습니다.
+    \subsubsection{FreeMarker 사용}
+    FreeMarker 기반의 스크립트를 이용하면 여러 개의 test를 Generator를 통해 생성할 수 있습니다. 다음은 예시입니다.
+    \begin{verbatim}
+    <#assign i = 1/>
+    <#list 1..100 as i>
+    randomGen 50000 50000 ${i} > $
+    </#list>\end{verbatim}
+    이 스크립트의 원리는 다음과 같습니다.
+    \begin{itemize}
+        \item 변수 \verb|i|를 첫 줄에서 할당합니다
+        \item 둘째 줄에서 for loop을 돌립니다.
+        \item \verb|randomGen|이라는 이름을 가진 generator에 인자 \verb|50000 50000 i| 를 넣어, 그 출력을 아직 만들어지지 않은 가장 낮은 번호의 test(\verb|$|)에 저장합니다.
+        \begin{itemize}
+            \item \verb|50000 50000|은 (이 경우) generator에게 전달하는 변수입니다.
+            \item \verb|${i}|를 넣지 않으면 Polygon이 중복된 test case라고 판단해, 실행이 되지 않습니다.
+            \item  또, 추가적으로 들어가는 \verb|${i}|는 seed의 역할도 합니다.
+        \end{itemize}
+    \end{itemize}
+    for문은 중첩될 수도 있으며, \verb|<#assign num = num + 1/>| 등의 문구로 변수의 값을 조절할 수 있습니다.
+\end{document}
