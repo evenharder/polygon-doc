@@ -1,0 +1,62 @@
+\documentclass{article}
+
+\usepackage[hangul]{kotex}
+\usepackage[unicode,bookmarks=true]{hyperref}
+\usepackage{fancyvrb}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[top=3cm, left=3cm, right=3cm, bottom=2cm]{geometry}
+\usepackage{lipsum}
+
+\begin{document}
+    \subsection{Stress}
+    Stress는 generator를 이용해 무작위 test를 생성하면서 혹시 있을지 모르는 예외(corner case)를 찾는 과정입니다. 이 stress는 기본적으로 correct / wrong answer만을 출력하는 범위에서 진행되어야 합니다.
+    \subsubsection{Stress 작성}
+    Stress 작성 항목은 다음과 같은 구성을 따릅니다.
+    \begin{itemize}
+        \item Script pattern : 어떤 generator를 어떻게 사용할지입니다. 기본 인자만 넣어도 됩니다.
+        \item Memory limit : test당 메모리 제한입니다.
+        \item Time limit : test당 시간 제한입니다.
+        \item Total time limit : 각 풀이별로 stress를 돌릴 시간입니다. (5초-120초)
+        \item Solutions : Stress를 돌릴 풀이를 의미합니다.
+        확장자까지 써야 합니다.
+        \item Description : 이 Stress에 대한 설명을 의미합니다.
+    \end{itemize}
+    \subsubsection{Stress 실행}
+    Stress를 실행할 경우 결과는 다음과 같습니다.
+    \begin{itemize}
+        \item countercase를 찾지 못한 경우로, 배경이 하얀색 그대로 남습니다.
+        \item countercase를 찾았을 경우 배경이 파란색이 되며, 해당 test를 추가할 수 있습니다.
+        \item 어떤 풀이가 correct나 wrong answer 이외의 결과를 내었을 때 배경이 빨간색이 되며, 해당 test를 추가할 수 있습니다.
+    \end{itemize}
+    \subsection{Invocation}
+    Invocation은 지금까지 진행한 작업의 최종확인입니다. 자동화된 검증 시스템으로, 원하는 solution file에 원하는 test case를 넣어서 의도대로 나오는지 확인해볼 수 있습니다.
+    \subsubsection{Invocation 분석}
+    Solution Files에서도 다루었지만, 각 풀이의 유형별로 허용되는 결과가 정해져 있습니다.
+    \begin{itemize}
+        \item Main correct solution : AC(Accepted)
+        \item Correct : AC
+        \item Incorrect : 이 풀이에 대해서 Incovation은 Verdict를 따지지 않습니다.
+        \item Time limit exceeded : AC 또는 TL(Time Limit Exceeded)
+        \item Wrong answer : AC 또는 WA(Wrong Answer)
+        \item Memory limit exceeded : AC 또는 ML(Memory Limit Exceeded)
+        \item Failed : AC 또는 RE(Runtime Error)
+    \end{itemize}
+    추가적으로 나올 수 있는 결과는 다음과 같습니다.
+    \begin{itemize}
+        \item RJ : Rejected로, Invocation이 실패해서 이후 test를 실행하지 않는 경우입니다.
+        \item IL : Idleness limit exceeded로, 보통 입력이 이제 안 들어오는데도 입력 함수를 사용해서 대기할 때 나옵니다.
+        \item FL : 무슨 의미인지는 모르겠지만 파일 입출력 관련 문제로 추정됩니다.
+    \end{itemize}
+    Invocation을 돌릴 때 TL은 특히 주의해서 보아야 합니다.
+    \begin{itemize}
+        \item 주황색으로 표시되는 test는 기존 time limit 안에는 종료되지 않았지만 그 두 배에서는 종료되었다는 것을 의미합니다.
+        \begin{itemize}
+            \item 환경에 따라 2배는 AC와 TL을 가를 수 있으므로 주의해야 합니다.
+        \end{itemize}
+        \item 파란색으로 표시되는 test는 가장 오래 걸렸던 test입니다.
+    \end{itemize}
+    Invocation은 결국 준비된 test에 대해서 모든 solution들이 예상된 결과를 보이는지 확인하는 마지막 절차입니다.
+\end{document}

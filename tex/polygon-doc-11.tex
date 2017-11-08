@@ -1,0 +1,36 @@
+\documentclass{article}
+
+\usepackage[hangul]{kotex}
+\usepackage[unicode,bookmarks=true]{hyperref}
+\usepackage{fancyvrb}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[top=3cm, left=3cm, right=3cm, bottom=2cm]{geometry}
+\usepackage{lipsum}
+
+\begin{document}
+    Checker는 풀이가 맞는지 틀린지 판별하는 프로그램입니다.
+    \subsection{Checker의 구성}
+    Validator에서 \verb|inf|가 있었던 것처럼, 제출한 답안의 풀이는 \verb|ouf|에, 모범 답안은 \verb|ans|에 저장되어 있습니다. Validator에서 사용했던 함수들로 읽어낼 수 있고, 추가적으로 다음 함수들을 사용합니다.
+    \begin{itemize}
+        \item \verb|void registerTestlibCmd(int argc, char* argv[])|\\
+        이 파일이 Checker라는 것을 선언하는 함수입니다. \verb|argc|와 \verb|argv|는 main의 그것과 같습니다.
+        \item \verb|void quit(TResult verdict, string message)|\\
+        \verb|void quit(TResult verdict, const char* message)|\\
+        \verb|void quitf(TResult verdict, const char* message, ...)|\\
+        Checker가 내린 판단을 \verb|verdict|에 저장하고 \verb|message|를 출력합니다. \verb|verdict|에 들어갈 수 있는 값은 다음과 같습니다.
+        \begin{itemize}
+            \item \verb|_ok| : OK, 정답
+            \item \verb|_wa| : WA, 오답
+            \item \verb|_pc| : Partial score (부분점수)
+            \item \verb|_fail| : Special Judge에서 모범 답안보다 훌륭한 값이 나왔을 때 사용
+        \end{itemize}
+    \end{itemize}
+    Checker는 3개의 수를 출력하라고 했는데 4개의 수를 출력하는 코드나 범위에 어긋난 수를 출력하는 코드 등 괴상한 상황도 처리해야 하며, Special Judge의 경우 답이 바른지도 처리해야 합니다. 치밀하게 구성되어야 하며, 길라잡이로 \verb|testlib.h|의 \verb|checker| 폴더에 예시가 동봉되어 있습니다.
+    \subsection{Checker 검증}
+    Checker를 검증하는 방법은 Validator를 검증하는 방식과 거의 동일합니다.
+    \subsection{Checker까지 만들었으면}
+    여기까지 진행했으면 Tests / Validator Test / Checker Test를 돌리는 것이 가능합니다.
+\end{document}
