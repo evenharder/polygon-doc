@@ -41,7 +41,7 @@
         \begin{itemize}
             \item 형만 다른 \verb|readInt|, \verb|readDouble|도 위 꼴로 존재하며, 추가적으로 실수 정밀도까지 다루는 \verb|readStrictDouble| 함수도 존재합니다.
         \end{itemize}
-        \item \verb|std::string readString()|, \verb|std::string readLine()|
+        \item \verb|std::string readString()|, \verb|std::string readLine()|\\
        줄바꿈(EOLN)이나 EOF를 읽을 때까지 읽은 문자를 \verb|std::string| 형으로 반환합니다.
        \begin{itemize}
            \item 역시 \verb|ptrn|과 \verb|variableName|이 있는 함수도 있으며, 이 쪽이 권장됩니다.
@@ -55,18 +55,18 @@
     \end{itemize}
     유의해야 할 점은 다음과 같습니다.
     \begin{itemize}
-        \item 각 함수들은 반드시 묘사된 의도로만 사용되어야 하며, 그렇지 않을 경우 에러가 날 수 있습니다(예시 : 파일을 아직 다 안 읽었는데 \verb|readEof| 호출).
+        \item 각 함수들은 의도에 따라서만 사용되어야 하며, 그렇지 않을 경우 에러가 날 수 있습니다(예시 : 파일을 아직 다 안 읽었는데 \verb|readEof| 호출).
         \item \verb|testlib.h|의 \verb|validator| 폴더 안에 예시가 동봉되어 있습니다.
     \end{itemize}
     \subsection{Validator 검증}
     만든 Validator를 검증하기 위한 테스트 데이터를 Validator - Add Test를 통해 만들 수 있습니다.
     \begin{itemize}
         \item 각 test에 대한 Input과 그에 따른 Verdict(결과)를 입력할 수 있습니다.
-        \item Multiple Tests 옵션을 활성화하면 \verb|===|을 줄의 경계로 여러 test를 넣을 수 있습니다.
+        \item Multiple Tests 옵션을 활성화하면 \verb|===| 경계로 여러 test를 넣을 수 있습니다.
         \begin{itemize}
             \item Validator의 test는 generator나 script 등으로 넣을 수 없으므로 이 쪽이 권장됩니다.
             \item 단, 메가바이트 단위의 텍스트를 Ctrl CV하는 것은 브라우저의 렉을 유발할 수 있습니다.
         \end{itemize}
-        \item 실제 위 test로 검증하는 것은 나중에 Main Solution을 설정하고 진행할 수 있습니다.
+        \item 실제 위 test를 이용한 검증은 나중에 Main Solution을 설정하고나서 진행할 수 있습니다.
     \end{itemize}
 \end{document}

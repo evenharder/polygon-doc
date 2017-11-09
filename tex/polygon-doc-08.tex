@@ -11,8 +11,7 @@
 \usepackage{lipsum}
 \begin{document}
     Test에는 test case들이 저장됩니다.
-    \subsection{Test 만들기}
-    \subsubsection{직접 추가}
+    \subsection{직접 추가}
     외부에서 만든 test case 추가는 Add Tests를 통해서 진행됩니다. 
     \begin{itemize}
         \item 직접 추가하기 : Data에 Ctrl CV하면 됩니다.
@@ -20,7 +19,7 @@
         \item From the files : File을 올리면 됩니다.
     \end{itemize}
     다만 몇 개의 예제를 제외하고는 manual한 방법은 권장되지 않습니다.
-    \subsubsection{Generator 작성 (Polygon)}
+    \subsection{Generator 작성 (Polygon)}
     \verb|testlib.h|를 사용해서 Generator를 만들 수 있습니다. 
     \begin{itemize}
         \item \verb|void registerGen(int argc, char* argv[], int randomGeneratorVersion)|\\
@@ -31,8 +30,8 @@
         0 이상 \verb|n| 미만의 \verb|T|형 값을 반환합니다.
         \item \verb|T next(T from, T to)|\\
         \verb|from| 이상 \verb|to| 이하의 \verb|T|형 값을 반환합니다.
-        \item \verb|std::string next(std::string ptm)|\\
-        \verb|ptm|에 있는 Regex 기반 패턴에 맞춘 무작위 문자열을 반환합니다.
+        \item \verb|std::string next(std::string ptrn)|\\
+        \verb|ptrn|에 있는 Regex 기반 패턴에 맞춘 무작위 문자열을 반환합니다.
         \item \verb|T wnext(T n, int type)|\\
         0 이상 \verb|n| 미만의 T형 수 중, \verb|type|이 양수일 때는 큰 쪽으로, 음수일 때는 작은 쪽으로 가중치가 부여됩니다.
         \item \verb|void shuffle(_RandomAccessIter __first, _RandomAccessIter __last)|\\
